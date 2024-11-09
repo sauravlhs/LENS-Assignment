@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "jest --passWithNoTests"  // Ensures Jest doesn’t fail due to missing tests
+    "test": "jest --passWithNoTests"  
   },
   "author": "Saurav Gupta",
   "license": "ISC",
