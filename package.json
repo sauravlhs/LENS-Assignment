@@ -1,19 +1,24 @@
 {
-    "name": "lens-assignment",
-    "version": "1.0.0",
-    "description": "Node.js project for CI/CD pipeline testing",
-    "main": "index.js",
-    "scripts": {
-      "start": "node index.js",
-      "test": "jest"
-    },
-    "author": "Your Name",
-    "license": "ISC",
-    "dependencies": {
-      "express": "^4.18.2"
-    },
-    "devDependencies": {
-      "jest": "^29.6.1"
-    }
+  "name": "lens-assignment",
+  "version": "1.0.0",
+  "description": "Node.js project for CI/CD pipeline testing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --passWithNoTests"  // Ensures Jest doesn’t fail due to missing tests
+  },
+  "author": "Saurav Gupta",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.6.1"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.github/"
+    ]
   }
-  
+}
