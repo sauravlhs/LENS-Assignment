@@ -34,7 +34,7 @@ jobs:
       - name: Build Docker Image
         env: 
           DEBUG: true
-        run: docker build -t lensassignment:latest . || echo "Docker build failed"
+        run: docker build -f Dockerfile -t lensassignment:latest . || echo "Docker build failed"
 
 
       - name: Push Docker Image
