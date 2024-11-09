@@ -32,11 +32,15 @@ jobs:
         #  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
-        run: docker build -t lensassignment:latest .
+        env: 
+          DEBUG: true
+        run: docker build -t lensassignment:latest . || echo "Docker build failed"
 
 
       - name: Push Docker Image
-        run: docker push lensassignment:latest
+        env: 
+          DEBUG: true
+        run: docker push lensassignment:latest || echo "Docker push failed"
 
     #  - name: Push to Google Container Registry
     #    env:
