@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Push to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t lensassignment:latest .
+
+    #  - name: Push to Google Container Registry
+    #    env:
+     #     GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      #    GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+       # run: |
+      #    echo "$GCP_SA_KEY" | base64 --decode > "${HOME}/gcloud.json"
+     #     gcloud auth activate-service-account --key-file="${HOME}/gcloud.json"
+       #   gcloud --quiet auth configure-docker
+        #  docker tag lensassignment:latest gcr.io/${GCP_PROJECT_ID}/lensassignment:latest
+         # docker push gcr.io/${GCP_PROJECT_ID}/lensassignment:latest
+
+ # deploy:
+  #  needs: build
+   # runs-on: ubuntu-latest
+    #steps:
+     # - name: Deploy to GCP Cloud Run
+      #  run: ./deploy.sh  # Add deploy script to deploy to Cloud Run
