@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "npx jest --passWithNoTests",
+    "test": "jest --passWithNoTests",
     "send-email": "node sendEmail.js"
   },
   "author": "Saurav Gupta",
