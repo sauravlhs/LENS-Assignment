@@ -41,7 +41,7 @@ jobs:
         env: 
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        # run: docker push lensassignment:latest || echo "Docker push failed"
+        run: docker push lensassignment:latest || echo "Docker push failed"
 
     #  - name: Push to Google Container Registry
     #    env:
