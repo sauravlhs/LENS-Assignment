@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_SERVER,
   port: process.env.SMTP_PORT,
-  secure: false, // true for 465, false for other ports
+  secure: false, 
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 const mailOptions = {
   from: process.env.SMTP_USER, // sender address
-  to: "recipient@example.com", // list of receivers
+  to: "vaidprakash1999@gmail.com", // list of receivers
   subject: "CI/CD Pipeline Status",
   text: "Your build was successful!",
 };
