@@ -45,6 +45,24 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
 
+      # Notify on Success
+      - name: Slack Notification - Success
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build and deployment succeeded!"}' $SLACK_WEBHOOK_URL
+
+      # Notify on Failure
+      - name: Slack Notification - Failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build or deployment failed!"}' $SLACK_WEBHOOK_URL
+
+
+
     #  - name: Push to Google Container Registry
     #    env:
      #     GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
