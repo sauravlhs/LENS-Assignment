@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 const mailOptions = {
   from: process.env.SMTP_USER, // sender address
-  to: "vaidprakash1999@gmail.com", // list of receivers
+  to: "vaidprakash1999@gmail.com", // list of receiver
   subject: "CI/CD Pipeline Status",
   text: "Your build was successful!",
 };
