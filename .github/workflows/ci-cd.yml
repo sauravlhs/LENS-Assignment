@@ -37,6 +37,33 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest || echo "Docker push failed"
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure AKS Set up
+        uses: azure/aks-set-context@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+
+      - name: Deploy to AKS
+        run: |
+          kubectl create secret docker-registry acr-secret \
+            --docker-server=${{ secrets.AZURE_ACR_LOGIN_SERVER }} \
+            --docker-username=${{ secrets.AZURE_ACR_USERNAME }} \
+            --docker-password=${{ secrets.AZURE_ACR_PASSWORD }} \
+            --namespace default
+
+          # Apply Kubernetes configurations
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
+      - name: Set up Horizontal Pod Autoscaler
+        run: |
+          kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
+
 
       # Notify on Success
       - name: Slack Notification - Success
@@ -44,7 +71,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build and deployment succeeded!"}' $SLACK_WEBHOOK_URL
+          curl -X POST -H 'Content-type: application/json' --data '{"text":" Build and deployment succeeded!"}' $SLACK_WEBHOOK_URL
 
       # Notify on Failure
       - name: Slack Notification - Failure
@@ -52,24 +79,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build or deployment failed!"}' $SLACK_WEBHOOK_URL
+          curl -X POST -H 'Content-type: application/json' --data '{"text":" Build or deployment failed!"}' $SLACK_WEBHOOK_URL
 
-
-
-    #  - name: Push to Google Container Registry
-    #    env:
-     #     GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      #    GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-       # run: |
-      #    echo "$GCP_SA_KEY" | base64 --decode > "${HOME}/gcloud.json"
-     #     gcloud auth activate-service-account --key-file="${HOME}/gcloud.json"
-       #   gcloud --quiet auth configure-docker
-        #  docker tag lensassignment:latest gcr.io/${GCP_PROJECT_ID}/lensassignment:latest
-         # docker push gcr.io/${GCP_PROJECT_ID}/lensassignment:latest
-
- # deploy:
-  #  needs: build
-   # runs-on: ubuntu-latest
-    #steps:
-     # - name: Deploy to GCP Cloud Run
-      #  run: ./deploy.sh  # Add deploy script to deploy to Cloud Run
+  
