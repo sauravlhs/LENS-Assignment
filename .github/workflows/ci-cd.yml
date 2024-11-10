@@ -41,20 +41,11 @@ jobs:
       - name: Run tests
         run: npm test
       
-     
-
-      
-
   provision:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Verify directory structure
-        run: |
-          ls -la
-          ls -la terraform  # Verify the terraform directory exists
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
