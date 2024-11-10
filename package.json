@@ -1,0 +1,9 @@
+{
+  "name": "lens-assignment",
+  "version": "1.0.0",
+  "description": "Node.js project for CI/CD pipeline testing",
+  "main": "index.js",
+  "author": "Saurav Gupta",
+  "license": "ISC"
+  
+}
