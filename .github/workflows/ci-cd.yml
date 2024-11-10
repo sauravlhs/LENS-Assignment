@@ -47,24 +47,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set AKS Context
-        uses: azure/aks-set-context@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
+      - name: Deploy Application to AKS
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
 
-          
+      - name: Install NGINX Ingress Controller
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm install nginx-ingress ingress-nginx/ingress-nginx \
+            --namespace ingress-basic \
+            --create-namespace \
+            --set controller.replicaCount=2 \
+            --set controller.nodeSelector."kubernetes\.io/os"=linux \
+            --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="${{ secrets.AZURE_RESOURCE_GROUP }}"
 
-   #   - name: Deploy to AKS
-    #    run: |  
-     #     kubectl create secret docker-registry acr-secret \
-      #    --docker-password=${{ secrets.AZURE_ACR_PASSWORD }} \
-       #     --namespace default
-
-          # Apply Kubernetes configurations
-#          kubectl apply -f k8s/deployment.yml
- #         kubectl apply -f k8s/service.yml  
+      - name: Deploy Ingress Resource
+        run: kubectl apply -f k8s/ingress.yaml  
 
       - name: Set up Horizontal Pod Autoscaler
         run: |
