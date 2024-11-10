@@ -55,7 +55,7 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ./terraform
+        working-directory: ../terraform
         env:
           creds: ${{ secrets.AZURE_CREDENTIALS }}     
 
