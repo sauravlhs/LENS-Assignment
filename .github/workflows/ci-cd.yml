@@ -115,6 +115,8 @@ jobs:
 
 
   Notification:
+    needs: [build, test, deploy]
+    runs-on: ubuntu-latest
     steps:
       - name: Slack Notification - Success
         if: success()
