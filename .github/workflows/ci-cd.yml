@@ -39,27 +39,11 @@ jobs:
         run: npm install
 
       - name: Run tests
-        run: npm test -- --coverage
-
-      - name: Check code coverage
-        run: npx jest --coverage  # Use appropriate command for your framework
-
-      - name: Upload code coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage
+        run: npm test
       
      
 
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Build Docker Image
-        run: docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest .
-
-      - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest
+      
 
   provision:
     runs-on: ubuntu-latest
@@ -91,6 +75,16 @@ jobs:
     needs: [build, test]
     runs-on: ubuntu-latest
     steps:
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image
+        run: docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest .
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest
+
       - name: Log in to Azure
         uses: azure/login@v1
         with:
@@ -120,7 +114,8 @@ jobs:
           kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
 
 
-      # Notify on Success
+  Notification:
+    steps:
       - name: Slack Notification - Success
         if: success()
         env:
