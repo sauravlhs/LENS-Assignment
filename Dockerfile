@@ -1,7 +1,7 @@
-# Use an official Node.js image as the base
+# Using an official Node.js image as the base image
 FROM node:20
 
-# Set working directory
+# Seting up working directory
 WORKDIR /app
 
 # Copy package.json and install dependencies
