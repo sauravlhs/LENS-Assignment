@@ -48,17 +48,15 @@ jobs:
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
           cluster-name: ${{ secrets.AZURE_AKS_CLUSTER_NAME }}
 
-      - name: Deploy to AKS
-        run: |
-          kubectl create secret docker-registry acr-secret \
-            --docker-server=${{ secrets.AZURE_ACR_LOGIN_SERVER }} \
-            --docker-username=${{ secrets.AZURE_ACR_USERNAME }} \
-            --docker-password=${{ secrets.AZURE_ACR_PASSWORD }} \
-            --namespace default
+   #   - name: Deploy to AKS
+    #    run: |
+     #     kubectl create secret docker-registry acr-secret \
+      #    --docker-password=${{ secrets.AZURE_ACR_PASSWORD }} \
+       #     --namespace default
 
           # Apply Kubernetes configurations
-          kubectl apply -f k8s/deployment.yml
-          kubectl apply -f k8s/service.yml
+#          kubectl apply -f k8s/deployment.yml
+ #         kubectl apply -f k8s/service.yml
 
       - name: Set up Horizontal Pod Autoscaler
         run: |
