@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Verify directory structure
         run: |
           ls -la
@@ -56,11 +56,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ../terraform
+        working-directory: ./terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ../terraform
+        working-directory: ./terraform
         env:
           creds: ${{ secrets.AZURE_CREDENTIALS }}     
 
