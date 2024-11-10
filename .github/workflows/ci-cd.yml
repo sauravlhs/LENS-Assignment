@@ -24,7 +24,7 @@ jobs:
         run: npm install -g jest
 
       - name: Run Tests
-        run: jest --passWithNoTests  # installing jest
+        run: jest --passWithNoTests  # installing jest expilictally.
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -36,10 +36,19 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest || echo "Docker push failed"
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+      #    client-id: ${{ secrets.AZURE_CLIENT_ID }}
+       #   client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        #  tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+         # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }
+
+   
 
       - name: Azure AKS Set up
         uses: azure/aks-set-context@v2
