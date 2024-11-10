@@ -59,7 +59,7 @@ jobs:
           
 
    #   - name: Deploy to AKS
-    #    run: |
+    #    run: |  
      #     kubectl create secret docker-registry acr-secret \
       #    --docker-password=${{ secrets.AZURE_ACR_PASSWORD }} \
        #     --namespace default
