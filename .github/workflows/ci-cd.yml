@@ -117,6 +117,7 @@ jobs:
   Notification:
     needs: [build, test, deploy]
     runs-on: ubuntu-latest
+    if: always()  # Ensures this job runs regardless of previous job status
     steps:
       - name: Slack Notification - Success
         if: success()
