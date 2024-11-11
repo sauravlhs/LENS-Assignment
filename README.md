@@ -47,4 +47,6 @@ Here, we have to replace the {subscription-id} with our subscription-id
 
 Once these are setup, we will configure Docker-compose, Kubernetes and Terraform 
 
-Once all the pipeline, required dependencies are setup
+Once all the pipeline, required dependencies are setup we can start the pipeline
+
+Pipeline will start once there is a new commit to the "main" branch and will follow as below

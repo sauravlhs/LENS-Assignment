@@ -1,19 +1,20 @@
 # Provider configuration
 provider "azurerm" {
   features {}
+  # Azure authentication using variables for security
   subscription_id = var.subscription_id
   client_id       = var.client_id
   client_secret   = var.client_secret
   tenant_id       = var.tenant_id
 }
 
-# Resource Group
+# Resource Group creation in Azure
 resource "azurerm_resource_group" "LensAssignment" {
   name     = var.resource_group_name
   location = var.location
 }
 
-# Virtual Network
+# Virtual Network creation in Azure
 resource "azurerm_virtual_network" "lens_vnet" {
   name                = "lensVNet"
   address_space       = ["10.0.0.0/16"]
@@ -21,7 +22,7 @@ resource "azurerm_virtual_network" "lens_vnet" {
   resource_group_name = azurerm_resource_group.LensAssignment.name
 }
 
-# Subnet
+# Subnet creation inside the Virtual Network
 resource "azurerm_subnet" "lens_subnet" {
   name                 = "lensSubnet"
   resource_group_name  = azurerm_resource_group.LensAssignment.name
@@ -29,7 +30,7 @@ resource "azurerm_subnet" "lens_subnet" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
-# Network Interface
+# Network Interface creation for the Virtual Machine
 resource "azurerm_network_interface" "lens_nic" {
   name                = "lensNIC"
   location            = var.location
@@ -42,7 +43,7 @@ resource "azurerm_network_interface" "lens_nic" {
   }
 }
 
-# Virtual Machine
+# Linux Virtual Machine configuration
 resource "azurerm_linux_virtual_machine" "lens_vm" {
   name                = "lensVM"
   resource_group_name = azurerm_resource_group.LensAssignment.name
@@ -52,12 +53,14 @@ resource "azurerm_linux_virtual_machine" "lens_vm" {
   network_interface_ids = [
     azurerm_network_interface.lens_nic.id,
   ]
-
+  
+  # OS disk configuration
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
 
+ # Ubuntu OS image reference from the Azure marketplace
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -66,7 +69,7 @@ resource "azurerm_linux_virtual_machine" "lens_vm" {
   }
 }
 
-# Storage Account
+# Azure Storage Account configuration
 resource "azurerm_storage_account" "lens_storage" {
   name                     = var.storage_account_name
   resource_group_name      = azurerm_resource_group.LensAssignment.name
@@ -75,7 +78,7 @@ resource "azurerm_storage_account" "lens_storage" {
   account_replication_type = "LRS"
 }
 
-# Storage Container
+# Storage Container within the Storage Account
 resource "azurerm_storage_container" "lens_container" {
   name                  = "lenscontainer"
   storage_account_name  = azurerm_storage_account.lens_storage.name
