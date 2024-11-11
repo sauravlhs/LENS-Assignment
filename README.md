@@ -19,7 +19,7 @@
 
 After saving, it should look like before
 
-![repository secret](Repository Secret.png)
+![Repository secret](image-3.png)
 
 **Now we have to create package.json file to install all the dependencies**
 
@@ -43,7 +43,7 @@ Here, we have to replace the {subscription-id} with our subscription-id
 
 **Once done you will see messages like below**
 
-![Slack notification](slack-notification.png)
+![Slack notification](image-1-1.png)
 
 Once these are setup, we will configure Docker-compose, Kubernetes and Terraform 
 
@@ -51,4 +51,4 @@ Once all the pipeline, required dependencies are setup we can start the pipeline
 
 Pipeline will start once there is a new commit to the "main" branch and will follow as below
 
-![Pipeline](pipeline.png)
+![Pipeline structure](image-2-1.png)
