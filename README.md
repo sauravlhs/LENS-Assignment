@@ -16,5 +16,7 @@
 - Scroll down and click on new repository secret
 - Add all the required username and password
 
+After saving, it should look like before
+
 ![repository secret](image.png)
 
