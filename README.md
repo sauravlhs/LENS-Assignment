@@ -100,7 +100,7 @@ Once logged in, we will deloy the application to AKS
 
 6. **Application deployment to AKS**
 - We will use Kubernetes to deploy the application.
-- For this, we would need deployment.yml and service.yml file stored in the k8s folder in root directory
+- For this, we would need deployment.yml and service.yml file stored in the k8s folder in .github/workflows directory
 - In order to manage the external traffic, we would need ingress and we will configure it in ingress.yml stored in k8s folder.
 
 7. **Autoscaling**
@@ -112,7 +112,7 @@ kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 
 
 8. **Setting Up Prometheus**
 - Using the pipeline, we will install promentheus and create a namespace for it.
-- In deployment.yml, we need to add metics for the containe as below
+- In deployment.yml, we need to add metrics for the container as below
 ```bash
 - containerPort: 80
   name: metrics
