@@ -110,7 +110,25 @@ Once logged in, we will deloy the application to AKS
 kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
 ```
 
-8. **Setting up slack to receive notification**
+8. **Setting Up Prometheus**
+- Using the pipeline, we will install promentheus and create a namespace for it.
+- In deployment.yml, we need to add metics for the containe as below
+```bash
+- containerPort: 80
+  name: metrics
+```
+-In service.yml, we need to update port protocol as below
+```bash
+- protocol: TCP
+  port: 9090                          
+  targetPort: 9090
+``` 
+
+9. **Setting Up Grafana**
+- Using the pipeline, we will install promentheus and create a namespace for it and a loadbalancer.
+- In ingress.yml, we need to add annotattions, host and port for grafana 
+
+10. **Setting up slack to receive notification**
 - After creating an account, select from scratch to build new app
 - Select slack workspace where you want to post the message.
 - In the app's settings, go to Incoming Webhooks on the left menu and select Activate Incoming Webhooks.
@@ -123,7 +141,7 @@ kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 
 
 ![Slack notification](image.png)
 
-- Once all the pipeline, required dependencies are setup we can start the pipeline
+- Once all the pipeline, required dependencies, and configurations are set up (including Terraform, Docker, Kubernetes, and necessary secrets), we can start the CI/CD pipeline
 
 - Pipeline will start once there is a new commit to the "main" branch and will follow as below
 
