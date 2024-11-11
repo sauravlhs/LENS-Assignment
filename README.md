@@ -21,7 +21,7 @@ After saving, it should look like before
 
 ![repository secret](image.png)
 
-Create package.json file to install all the dependencies
+***Now we have to create package.json file to install all the dependencies***
 
 ### Setting up Azure service principal
  In order to access the Azure portal resporces, we would be needing Azure service principal
@@ -33,3 +33,14 @@ Create package.json file to install all the dependencies
 ```
 Here, we have to replace the {subscription-id} with our subscription-id
 
+### Setting up slack to receive notification
+- After creating an account, select from scratch to build new app
+- Select slack workspace where you want to post the message.
+- In the app's settings, go to Incoming Webhooks on the left menu and select Activate Incoming Webhooks.
+- Click Add New Webhook to Workspace, then choose a channel to post your messages and allow permissions. 
+- After this we’ll get a webhook URL that we’ll use in our GitHub Actions workflow.
+- Then save the webhook to github repository secrets as above.
+
+***Once done you will see messages like below***
+
+![Slack notification](image-1.png)
