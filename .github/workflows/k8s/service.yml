@@ -8,5 +8,8 @@ spec:
   ports:
     - protocol: TCP                       # Specifies the protocol for the port
       port: 80                           
-      targetPort: 80                      
+      targetPort: 80
+    - protocol: TCP
+      port: 9090                          # Expose metrics port
+      targetPort: 9090                      
   type: LoadBalancer                      

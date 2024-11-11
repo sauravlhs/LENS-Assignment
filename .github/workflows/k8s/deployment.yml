@@ -16,7 +16,9 @@ spec:
       - name: lensassignment                                                      # Name of the container in this pod
         image: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/lensassignment:latest        
         ports:
-        - containerPort: 80                                                     
+        - containerPort: 80
+        - containerPort: 80
+          name: metrics                                                     
         readinessProbe:                                                           # Readiness probe to check if the application is ready to serve traffic
           httpGet:
             path: /healthz

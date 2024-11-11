@@ -23,8 +23,8 @@ After saving, it should look like before
 
 **Now we have to create package.json file to install all the dependencies**
 
-### Setting up Azure service principal
- In order to access the Azure portal resporces, we would be needing Azure service principal
+### Setting up Azure service principle
+ In order to access the Azure portal resource, we would be needing Azure service principal
 
  - Open Azure cloud shell
  - Run the below command to create Service Principal and generate credentials:
@@ -37,11 +37,11 @@ Here, we have to replace the {subscription-id} with our subscription-id
 ### Now we will setup pipeline
 
 1. **Build Step**
-- We will Ubuntu OS for the job and NodeJS for the environment.
+- We will use Ubuntu OS for the job and NodeJS for the environment.
 - We will define the required dependencies in package.json.
 
 2. **Test Step**
-- We will Ubuntu OS for the job and NodeJS for the environment.
+- We will use Ubuntu OS for the job and NodeJS for the environment.
 - We will be using jest for testing scenario.
 
 3. **Provision the infrastructure using Terraform**
@@ -54,16 +54,16 @@ Here, we have to replace the {subscription-id} with our subscription-id
        run: terraform apply -auto-approve
 ```
 4. **Build and push image to docker**
-- First we will make sure thaat the build and test stage has passed successfully by adding the below line in the pipeline.
+- First we will make sure that the build and test stage has passed successfully by adding the below line in the pipeline.
 ```bash
     needs: [build, test]
 ```
 - Once this is successful, we will login to Docker. For secure login, we will use Repository secrets where docker login and password will be stored. we can access those via below command
 ```bash
     ${{ secrets.DOCKER_USERNAME }}
-    ${{ secrets.DOCKER_USERNAME }}
+    ${{ secrets.DOCKER_PASSWORD }}
 ```
-DOCKER_USERNAME and DOCKER_USERNAME should be same as of what mentioned in Repository secrets
+DOCKER_USERNAME and DOCKER_PASSWORD should be same as of what mentioned in Repository secrets
 - Now we will have to push the docker image from local repository to remote repository
 ```bash
     docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest
@@ -73,7 +73,7 @@ This will push the Docker image from local to Docker Hub central repository.
 **Now we have to access the azure portal**
 
 5. **Azure Login**
-- To Login to azure, we will azure credentials like below
+- To Login to azure, we will use azure credentials like below
 ```bash
     creds: ${{ secrets.AZURE_CREDENTIALS }}
 ```
@@ -105,7 +105,7 @@ Once logged in, we will deloy the application to AKS
 
 7. **Autoscaling**
 - For autoscaling, we will use Horizontal Pod autoacaling
-- We need to define CPU limit, minimum replica count and mazimum replica count like below
+- We need to define CPU limit, minimum replica count and maximum replica count like below
 ```bash
 kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
 ```
