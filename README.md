@@ -34,15 +34,6 @@ After saving, it should look like before
 Here, we have to replace the {subscription-id} with our subscription-id
 
 
-
-### Setting up slack to receive notification
-- After creating an account, select from scratch to build new app
-- Select slack workspace where you want to post the message.
-- In the app's settings, go to Incoming Webhooks on the left menu and select Activate Incoming Webhooks.
-- Click Add New Webhook to Workspace, then choose a channel to post your messages and allow permissions. 
-- After this we’ll get a webhook URL that we’ll use in our GitHub Actions workflow.
-- Then save the webhook to github repository secrets as above.
-
 ### Now we will setup pipeline
 
 1. **Build Step**
@@ -112,16 +103,28 @@ Once logged in, we will deloy the application to AKS
 - For this, we would need deployment.yml and service.yml file stored in the k8s folder in root directory
 - In order to manage the external traffic, we would need ingress and we will configure it in ingress.yml stored in k8s folder.
 
+7. **Autoscaling**
+- For autoscaling, we will use Horizontal Pod autoacaling
+- We need to define CPU limit, minimum replica count and mazimum replica count like below
+```bash
+kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
+```
+
+8. **Setting up slack to receive notification**
+- After creating an account, select from scratch to build new app
+- Select slack workspace where you want to post the message.
+- In the app's settings, go to Incoming Webhooks on the left menu and select Activate Incoming Webhooks.
+- Click Add New Webhook to Workspace, then choose a channel to post your messages and allow permissions. 
+- After this we’ll get a webhook URL that we’ll use in our GitHub Actions workflow.
+- Then save the webhook to github repository secrets as above.
 
 
 **Once done you will see messages like below**
 
 ![Slack notification](image.png)
 
-Once these are setup, we will configure Docker-compose, Kubernetes and Terraform 
+- Once all the pipeline, required dependencies are setup we can start the pipeline
 
-Once all the pipeline, required dependencies are setup we can start the pipeline
-
-Pipeline will start once there is a new commit to the "main" branch and will follow as below
+- Pipeline will start once there is a new commit to the "main" branch and will follow as below
 
 ![Pipeline structure](image-2-1.png)
