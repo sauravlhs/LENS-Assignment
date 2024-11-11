@@ -19,9 +19,9 @@
 
 After saving, it should look like before
 
-![repository secret](image.png)
+![repository secret](Repository Secret.png)
 
-***Now we have to create package.json file to install all the dependencies***
+**Now we have to create package.json file to install all the dependencies**
 
 ### Setting up Azure service principal
  In order to access the Azure portal resporces, we would be needing Azure service principal
@@ -41,6 +41,10 @@ Here, we have to replace the {subscription-id} with our subscription-id
 - After this we’ll get a webhook URL that we’ll use in our GitHub Actions workflow.
 - Then save the webhook to github repository secrets as above.
 
-***Once done you will see messages like below***
+**Once done you will see messages like below**
 
-![Slack notification](image-1.png)
+![Slack notification](slack-notification.png)
+
+Once these are setup, we will configure Docker-compose, Kubernetes and Terraform 
+
+Once all the pipeline, required dependencies are setup

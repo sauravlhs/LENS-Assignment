@@ -1,54 +1,81 @@
-# Configuring the Azure Provider with the required features
+# Provider configuration
 provider "azurerm" {
   features {}
 }
 
-# Configuring the Azure Active Directory Provide
-provider "azuread" {}
-
 # Resource Group
-resource "azurerm_resource_group" "assignment" {
-  name     = "LensAssignment"                                                 # Name of the resource group
-  location = "East US"                                                        # Region where the resource group will be located
+resource "azurerm_resource_group" "example_rg" {
+  name     = var.resource_group_name
+  location = var.location
 }
 
-# Azure Container Registry
-resource "azurerm_container_registry" "example" {
-  name                     = "LensAssignment"                                 # Name of the Azure Container Registry
-  resource_group_name       = azurerm_resource_group.assignment.name          # Reference to the resource group
-  location                 = azurerm_resource_group.assignment.location       # Region for the ACR
-  sku                       = "Basic"
-  admin_enabled            = true                                             # To enable admin user for the ACR login
+# Virtual Network
+resource "azurerm_virtual_network" "example_vnet" {
+  name                = "exampleVNet"
+  address_space       = ["10.0.0.0/16"]
+  location            = var.location
+  resource_group_name = azurerm_resource_group.example_rg.name
 }
 
-# Azure Kubernetes Service (AKS)
-resource "azurerm_kubernetes_cluster" "assignment" {
-  name                = "AssignmentLens"                                      # Name of the AKS cluster
-  location            = azurerm_resource_group.assignment.location            # Region for the AKS cluster
-  resource_group_name = azurerm_resource_group.assignment.name                # Resource group for the AKS cluster
-  dns_prefix          = "assignmentleaks"                                     # DNS prefix for the AKS cluster
+# Subnet
+resource "azurerm_subnet" "example_subnet" {
+  name                 = "exampleSubnet"
+  resource_group_name  = azurerm_resource_group.example_rg.name
+  virtual_network_name = azurerm_virtual_network.example_vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
 
-  default_node_pool {
-    name       = "basic"                                                      # Name of the basic node pool
-    node_count = 2                                                            # Number of nodes in the basic node pool
-    vm_size    = "Standard_D2S_v3"                                            # VM size for each node in the pool
+# Network Interface
+resource "azurerm_network_interface" "example_nic" {
+  name                = "exampleNIC"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.example_rg.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.example_subnet.id
+    private_ip_address_allocation = "Dynamic"
   }
+}
 
-  identity {
-    type = "SystemAssigned"                                                   # Automatically managed identity for the AKS cluster
-  }
-
-  tags = {
-    environment = "Dev/Test"                                                  # Label to indicate environment
-  }
-
+# Virtual Machine
+resource "azurerm_linux_virtual_machine" "example_vm" {
+  name                = "exampleVM"
+  resource_group_name = azurerm_resource_group.example_rg.name
+  location            = var.location
+  size                = "Standard_B1s"
+  admin_username      = "azureuser"
+  network_interface_ids = [
+    azurerm_network_interface.example_nic.id,
+  ]
   
+  # Authentication with SSH public key
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
 }
 
-# Log Analytics Workspace
-resource "azurerm_log_analytics_workspace" "logs" {
-  name                = "LensAssignment-logs"                                 # Name of the Log Analytics workspace
-  location            = azurerm_resource_group.logs.location                  # Location for the workspace
-  resource_group_name = azurerm_resource_group.logs.name                      # Resource group for the workspace
-  sku                 = "PerGB2018"                                           # Pricing tier for Log Analytics workspace
+# Storage Account
+resource "azurerm_storage_account" "example_storage" {
+  name                     = var.storage_account_name
+  resource_group_name      = azurerm_resource_group.example_rg.name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+# Storage Container
+resource "azurerm_storage_container" "example_container" {
+  name                  = "examplecontainer"
+  storage_account_name  = azurerm_storage_account.example_storage.name
+  container_access_type = "private"
 }
