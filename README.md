@@ -43,7 +43,7 @@ Here, we have to replace the {subscription-id} with our subscription-id
 
 **Once done you will see messages like below**
 
-![Slack notification](image-1-1.png)
+![Slack notification](image.png)
 
 Once these are setup, we will configure Docker-compose, Kubernetes and Terraform 
 
