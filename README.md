@@ -1,6 +1,6 @@
 # LENS-Assignment
 
-###Prerequisites
+### Prerequisites
  Before starting, ensure the following tools, services, and configurations are ready:
 
 - Azure Account: To use Azure services such as AKS and ACR.
@@ -9,9 +9,12 @@
 - Docker Hub Account: for storing Docker images.
 - GitHub Repository: Where your code is stored and configured with GitHub Actions.
 
-###Store credentials in the Repository Secrets
+### Store credentials in the Repository Secrets
 
 - Go to repository setting
 - Under secrets and variables, select Actions
 - Scroll down and click on new repository secret
 - Add all the required username and password
+
+![repository secret](image.png)
+
