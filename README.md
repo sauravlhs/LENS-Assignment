@@ -36,15 +36,15 @@ Here, we have to replace the {subscription-id} with our subscription-id
 
 ### Now we will setup pipeline
 
-1. **Build Step**
+**1. Build Step**
 - We will use Ubuntu OS for the job and NodeJS for the environment.
 - We will define the required dependencies in package.json.
 
-2. **Test Step**
+**2. Test Step**
 - We will use Ubuntu OS for the job and NodeJS for the environment.
 - We will be using jest for testing scenario.
 
-3. **Provision the infrastructure using Terraform**
+**3. Provision the infrastructure using Terraform**
 - We'll use OS and environment same as above
 - Required infrastructure will be defined in main.tf and it's variables in variables.tf
 - The terraform folder will be stored in root directory
@@ -53,7 +53,7 @@ Here, we have to replace the {subscription-id} with our subscription-id
      - name: Terraform Apply                                   
        run: terraform apply -auto-approve
 ```
-4. **Build and push image to docker**
+**4. Build and push image to docker**
 - First we will make sure that the build and test stage has passed successfully by adding the below line in the pipeline.
 ```bash
     needs: [build, test]
@@ -72,7 +72,7 @@ This will push the Docker image from local to Docker Hub central repository.
 
 **Now we have to access the azure portal**
 
-5. **Azure Login**
+**5. Azure Login**
 - To Login to azure, we will use azure credentials like below
 ```bash
     creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -98,19 +98,19 @@ It will give the output like below
 ```
 Once logged in, we will deloy the application to AKS
 
-6. **Application deployment to AKS**
+**6. Application deployment to AKS**
 - We will use Kubernetes to deploy the application.
 - For this, we would need deployment.yml and service.yml file stored in the k8s folder in .github/workflows directory
 - In order to manage the external traffic, we would need ingress and we will configure it in ingress.yml stored in k8s folder.
 
-7. **Autoscaling**
+**7. Autoscaling**
 - For autoscaling, we will use Horizontal Pod autoacaling
 - We need to define CPU limit, minimum replica count and maximum replica count like below
 ```bash
 kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
 ```
 
-8. **Setting Up Prometheus**
+**8. Setting Up Prometheus**
 - Using the pipeline, we will install promentheus and create a namespace for it.
 - In deployment.yml, we need to add metrics for the container as below
 ```bash
@@ -124,11 +124,11 @@ kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 
   targetPort: 9090
 ``` 
 
-9. **Setting Up Grafana**
+**9. Setting Up Grafana**
 - Using the pipeline, we will install promentheus and create a namespace for it and a loadbalancer.
 - In ingress.yml, we need to add annotattions, host and port for grafana 
 
-10. **Setting up slack to receive notification**
+**10. Setting up slack to receive notification**
 - After creating an account, select from scratch to build new app
 - Select slack workspace where you want to post the message.
 - In the app's settings, go to Incoming Webhooks on the left menu and select Activate Incoming Webhooks.
