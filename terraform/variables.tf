@@ -1,18 +1,40 @@
-#Specifying the region for Azure resources
+# Define variables
 
-variable "azure_region" {
-  description = "Azure region for resources"
-  default     = "East US"
+variable "subscription_id" {
+  description = "The Azure subscription ID"
+  type        = string
 }
 
-#To store the name of the Azure Container Registry (ACR)
-
-variable "acr_name" {
-  description = "Azure Container Registry name"
+variable "client_id" {
+  description = "The Azure client ID"
+  type        = string
 }
 
-#To specify the name of the Azure Kubernetes Service (AKS) cluster
+variable "client_secret" {
+  description = "The Azure client secret"
+  type        = string
+}
 
-variable "aks_name" {
-  description = "Azure Kubernetes Service cluster name"
+variable "tenant_id" {
+  description = "The Azure tenant ID"
+  type        = string
+}
+
+variable "resource_group_name" {
+  description = "Name of the Azure resource group"
+  type        = string
+  default     = "LensAssignment"
+}
+
+variable "location" {
+  description = "Azure region"
+  type        = string
+  default     = "Central India"
+}
+
+
+variable "storage_account_name" {
+  description = "Unique name for the Azure storage account"
+  type        = string
+  default     = "examplestoracc123"
 }
