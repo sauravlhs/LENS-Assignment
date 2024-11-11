@@ -1,4 +1,4 @@
-apiVersion: apps/v1                                                               # Specifies the API version
+apiVersion: apps/v1                                                             
 kind: Deployment                                                                  # Type of Kubernetes resource
 metadata:
   name: lensassignment-deployment                                                 # Name of the Deployment
@@ -14,15 +14,15 @@ spec:
     spec:
       containers:
       - name: lensassignment                                                      # Name of the container in this pod
-        image: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/lensassignment:latest        # Container image with version "latest"
+        image: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/lensassignment:latest        
         ports:
-        - containerPort: 80                                                       # Exposes port 80 within the container
+        - containerPort: 80                                                     
         readinessProbe:                                                           # Readiness probe to check if the application is ready to serve traffic
           httpGet:
             path: /healthz
-            port: 80                                                              # Port for the readiness probe
+            port: 80                                                            
           initialDelaySeconds: 10                                                 # Time to wait before checking readiness after container starts
-          periodSeconds: 30                                                       # Frequency of readiness checks
+          periodSeconds: 30                                                       
         livenessProbe:                                                            # Liveness probe to check if the application is still running
           httpGet:
             path: /healthz
@@ -30,7 +30,7 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 20
         env:                                                                      # Environment variables for the container
-          - name: ENV_VARIABLE                                                    # Name of the environment variable
+          - name: ENV_VARIABLE                                                    
             valueFrom:
               secretKeyRef:
                 name: mysecret                                                    # Name of the Kubernetes Secret where the variable is stored

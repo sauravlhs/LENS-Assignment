@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1                          # Specifies the API version
+apiVersion: networking.k8s.io/v1                          
 kind: Ingress                                             # Type of Kubernetes resource
 metadata:
   name: myapp-ingress                                     # Name of the Ingress resource

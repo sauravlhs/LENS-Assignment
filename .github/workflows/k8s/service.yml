@@ -7,6 +7,6 @@ spec:
     app: lensassignment                   # Selects the Pods to associate with this Service
   ports:
     - protocol: TCP                       # Specifies the protocol for the port
-      port: 80                            # Exposes this port on the Service
-      targetPort: 80                      # Directs traffic to this port on the Pods
-  type: LoadBalancer                      # Type of Service that exposes the application externally
+      port: 80                           
+      targetPort: 80                      
+  type: LoadBalancer                      

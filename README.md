@@ -60,7 +60,7 @@ Here, we have to replace the {subscription-id} with our subscription-id
 - In order to create the infrastructure using pipeline we will use auto approve after the terraform file is validated like below
 ```bash
      - name: Terraform Apply                                   
-             run: terraform apply -auto-approve
+       run: terraform apply -auto-approve
 ```
 4. **Build and push image to docker**
 - First we will make sure thaat the build and test stage has passed successfully by adding the below line in the pipeline.
@@ -77,6 +77,42 @@ DOCKER_USERNAME and DOCKER_USERNAME should be same as of what mentioned in Repos
 ```bash
     docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest
 ```
+This will push the Docker image from local to Docker Hub central repository.
+
+**Now we have to access the azure portal**
+
+5. **Azure Login**
+- To Login to azure, we will azure credentials like below
+```bash
+    creds: ${{ secrets.AZURE_CREDENTIALS }}
+```
+- We can get this by running the below command
+```bash
+    az ad sp create-for-rbac --name "github-actions-sp" --role contributor --scopes /subscriptions/{subscription-id} --sdk-auth
+```
+It will give the output like below
+```bash
+{
+  "clientId": "Your clientId",
+  "clientSecret": "Your clientSecret",
+  "subscriptionId": "Your subscriptionId",
+  "tenantId": "Your tenantId",
+  "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+  "resourceManagerEndpointUrl": "https://management.azure.com/",
+  "activeDirectoryGraphResourceId": "https://graph.windows.net/",
+  "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+  "galleryEndpointUrl": "https://gallery.azure.com/",
+  "managementEndpointUrl": "https://management.core.windows.net/"
+}
+```
+Once logged in, we will deloy the application to AKS
+
+6. **Application deployment to AKS**
+- We will use Kubernetes to deploy the application.
+- For this, we would need deployment.yml and service.yml file stored in the k8s folder in root directory
+- In order to manage the external traffic, we would need ingress and we will configure it in ingress.yml stored in k8s folder.
+
+
 
 **Once done you will see messages like below**
 
