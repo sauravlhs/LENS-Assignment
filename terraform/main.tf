@@ -8,49 +8,49 @@ provider "azurerm" {
 }
 
 # Resource Group
-resource "azurerm_resource_group" "example_rg" {
+resource "azurerm_resource_group" "LensAssignment" {
   name     = var.resource_group_name
   location = var.location
 }
 
 # Virtual Network
-resource "azurerm_virtual_network" "example_vnet" {
-  name                = "exampleVNet"
+resource "azurerm_virtual_network" "lens_vnet" {
+  name                = "lensVNet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = azurerm_resource_group.example_rg.name
+  resource_group_name = azurerm_resource_group.LensAssignment.name
 }
 
 # Subnet
-resource "azurerm_subnet" "example_subnet" {
-  name                 = "exampleSubnet"
-  resource_group_name  = azurerm_resource_group.example_rg.name
-  virtual_network_name = azurerm_virtual_network.example_vnet.name
+resource "azurerm_subnet" "lens_subnet" {
+  name                 = "lensSubnet"
+  resource_group_name  = azurerm_resource_group.LensAssignment.name
+  virtual_network_name = azurerm_virtual_network.lens_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 # Network Interface
-resource "azurerm_network_interface" "example_nic" {
-  name                = "exampleNIC"
+resource "azurerm_network_interface" "lens_nic" {
+  name                = "lensNIC"
   location            = var.location
-  resource_group_name = azurerm_resource_group.example_rg.name
+  resource_group_name = azurerm_resource_group.LensAssignment.name
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.example_subnet.id
+    subnet_id                     = azurerm_subnet.lens_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
 
 # Virtual Machine
-resource "azurerm_linux_virtual_machine" "example_vm" {
-  name                = "exampleVM"
-  resource_group_name = azurerm_resource_group.example_rg.name
+resource "azurerm_linux_virtual_machine" "lens_vm" {
+  name                = "lensVM"
+  resource_group_name = azurerm_resource_group.LensAssignment.name
   location            = var.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
   network_interface_ids = [
-    azurerm_network_interface.example_nic.id,
+    azurerm_network_interface.lens_nic.id,
   ]
 
   os_disk {
@@ -67,17 +67,17 @@ resource "azurerm_linux_virtual_machine" "example_vm" {
 }
 
 # Storage Account
-resource "azurerm_storage_account" "example_storage" {
+resource "azurerm_storage_account" "lens_storage" {
   name                     = var.storage_account_name
-  resource_group_name      = azurerm_resource_group.example_rg.name
+  resource_group_name      = azurerm_resource_group.LensAssignment.name
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
 
 # Storage Container
-resource "azurerm_storage_container" "example_container" {
-  name                  = "examplecontainer"
-  storage_account_name  = azurerm_storage_account.example_storage.name
+resource "azurerm_storage_container" "lens_container" {
+  name                  = "lenscontainer"
+  storage_account_name  = azurerm_storage_account.lens_storage.name
   container_access_type = "private"
 }

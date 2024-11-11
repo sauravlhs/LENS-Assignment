@@ -36,5 +36,5 @@ variable "location" {
 variable "storage_account_name" {
   description = "Unique name for the Azure storage account"
   type        = string
-  default     = "examplestoracc123"
+  default     = "lensacc123"
 }
