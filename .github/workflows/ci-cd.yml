@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main                                                    # Triggers pipeline on push events to the main branch
-  pull_request:
-    branches:
-      - main
 
 
 # Installing dependencies and sets up the environment
