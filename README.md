@@ -33,6 +33,8 @@ After saving, it should look like before
 ```
 Here, we have to replace the {subscription-id} with our subscription-id
 
+
+
 ### Setting up slack to receive notification
 - After creating an account, select from scratch to build new app
 - Select slack workspace where you want to post the message.
@@ -40,6 +42,41 @@ Here, we have to replace the {subscription-id} with our subscription-id
 - Click Add New Webhook to Workspace, then choose a channel to post your messages and allow permissions. 
 - After this we’ll get a webhook URL that we’ll use in our GitHub Actions workflow.
 - Then save the webhook to github repository secrets as above.
+
+### Now we will setup pipeline
+
+1. **Build Step**
+- We will Ubuntu OS for the job and NodeJS for the environment.
+- We will define the required dependencies in package.json.
+
+2. **Test Step**
+- We will Ubuntu OS for the job and NodeJS for the environment.
+- We will be using jest for testing scenario.
+
+3. **Provision the infrastructure using Terraform**
+- We'll use OS and environment same as above
+- Required infrastructure will be defined in main.tf and it's variables in variables.tf
+- The terraform folder will be stored in root directory
+- In order to create the infrastructure using pipeline we will use auto approve after the terraform file is validated like below
+```bash
+     - name: Terraform Apply                                   
+             run: terraform apply -auto-approve
+```
+4. **Build and push image to docker**
+- First we will make sure thaat the build and test stage has passed successfully by adding the below line in the pipeline.
+```bash
+    needs: [build, test]
+```
+- Once this is successful, we will login to Docker. For secure login, we will use Repository secrets where docker login and password will be stored. we can access those via below command
+```bash
+    ${{ secrets.DOCKER_USERNAME }}
+    ${{ secrets.DOCKER_USERNAME }}
+```
+DOCKER_USERNAME and DOCKER_USERNAME should be same as of what mentioned in Repository secrets
+- Now we will have to push the docker image from local repository to remote repository
+```bash
+    docker push ${{ secrets.DOCKER_USERNAME }}/lensassignment:latest
+```
 
 **Once done you will see messages like below**
 
