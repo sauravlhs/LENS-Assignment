@@ -1,32 +1,36 @@
-version: '3.8'
+version: '3.8'                                        # Docker compose file format version
+
+# Service definition for the application
 
 services:
   app:
     build:
-      context: .
+      context: .                                      # Set build context to current directory
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:3000"                                   # Maps port 3000 to host the application
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mydb
+      - MONGO_URI=mongodb://mongo:27017/mydb          # Sets MongoDB URI app to connect to the MongoDB container
     depends_on:
-      - mongo
+      - mongo                                         # Ensures the MongoDB container starts before the app container
     networks:
-      - mynetwork
+      - LensNetwork                                   # Connects the app container to a user-defined network named "LensNetwork"
     volumes:
-      - ./app:/app
+      - ./app:/app                                    # Mounts the local "app" directory to "/app" in the container
+
+ # Service definition for MongoDB
 
   mongo:
-    image: mongo:latest
+    image: mongo:latest                               # Uses the latest MongoDB image from Docker Hub
     volumes:
-      - mongo-data:/data/db
+      - mongo-data:/data/db                           # Persists MongoDB data in a named volume "mongo-data"
     networks:
-      - mynetwork
+      - LensNetwork                                   # Connects the MongoDB container to the same network as the app container
 
 networks:
-  mynetwork:
-    driver: bridge
+  LensNetwork:
+    driver: bridge                                    # Uses a bridge network driver, providing network isolation
 
 volumes:
   mongo-data:
-    driver: local
+    driver: local                                     # Specifies a local volume driver for data persistence

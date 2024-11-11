@@ -1,19 +1,19 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: networking.k8s.io/v1                          # Specifies the API version
+kind: Ingress                                             # Type of Kubernetes resource
 metadata:
-  name: myapp-ingress
-  namespace: default
+  name: myapp-ingress                                     # Name of the Ingress resource
+  namespace: default                                      # Namespace where the Ingress resource will be created
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  rules:
-  - host: LensAssignment.com
+  rules:                                                  # Defines the routing rule
+  - host: LensAssignment.com                              # Specifies the hostname for accessing the service
     http:
       paths:
-      - path: /
+      - path: /                                           # URL path to match
         pathType: Prefix
         backend:
           service:
-            name: myapp-service
+            name: myapp-service                           # Specifies the Service name to route traffic to
             port:
-              number: 80
+              number: 80                                  # Specifies the port on the Service to which traffic will be forwarded

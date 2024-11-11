@@ -1,13 +1,12 @@
-# k8s/service.yaml
-apiVersion: v1
-kind: Service
+apiVersion: v1                            # Specifies the API version
+kind: Service                             # Type of Kubernetes resource
 metadata:
-  name: lensassignment-service
+  name: lensassignment-service            # Name of the Service to be usede within the cluster
 spec:
   selector:
-    app: lensassignment
+    app: lensassignment                   # Selects the Pods to associate with this Service
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+    - protocol: TCP                       # Specifies the protocol for the port
+      port: 80                            # Exposes this port on the Service
+      targetPort: 80                      # Directs traffic to this port on the Pods
+  type: LoadBalancer                      # Type of Service that exposes the application externally

@@ -1,69 +1,74 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline                                            # Defines the name of the pipeline
 
 on:
   push:
     branches:
-      - main
+      - main                                                    # Triggers pipeline on push events to the main branch
   pull_request:
     branches:
       - main
 
+
+# Installing dependencies and sets up the environment
 jobs:
-  build:
+  build:                                                        # Specifies the OS for the job
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout code                                     # Checks out the repository code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node.js                                    # Sets up the Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install dependencies                              # Installs project dependencies
         run: npm install
 
+
+# Runs tests after a successful build
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest                                      # Specifies the OS for the job
     needs: build
     steps:
-      - name: Checkout code
+      - name: Checkout code                                     # Checks out the repository code   
         uses: actions/checkout@v2
       
-      - name: Set up Node.js (or Python) environment
+      - name: Set up Node.js (or Python) environment            # Sets up the Node.js environment
         uses: actions/setup-node@v2
         with:
           node-version: '16'
           
-      - name: Install dependencies
+      - name: Install dependencies                              # Installs test dependencies
         run: npm install
 
-      - name: Run tests
+      - name: Run tests                                         # Executes the tests in the repository
         run: npm test
       
   provision:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest                                      # Specifies the OS for the job
     steps:
-      - name: Checkout code
+      - name: Checkout code                                     # Checks out the repository code
         uses: actions/checkout@v3
 
-      - name: Set up Terraform
+      - name: Set up Terraform                                  # Sets up Terraform CLI 
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: '1.5.0'
 
-      - name: Terraform Init
+      - name: Terraform Init                                    # Initializes Terraform in the specified directory
         run: terraform init
         working-directory: ./terraform
 
-      - name: Terraform Apply
+      - name: Terraform Apply                                   # Applies the Terraform configuration
         run: terraform apply -auto-approve
         working-directory: ./terraform
         env:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}     
+          creds: ${{ secrets.AZURE_CREDENTIALS }}               # Uses Azure credentials for authentication
 
+  # Builds and pushes Docker images, deploys the application to AKS, and sets up Ingress and Autoscaling
   deploy:
-    needs: [build, test]
+    needs: [build, test]                                        # Ensures build and test jobs complete before deployin
     runs-on: ubuntu-latest
     steps:
 
@@ -79,14 +84,14 @@ jobs:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}               # Authenticates with Azure using GitHub secrets
 
-      - name: Deploy Application to AKS
+      - name: Deploy Application to AKS                         # Deploys app components to Azure Kubernetes Service (AKS)
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
-      - name: Install NGINX Ingress Controller
+      - name: Install NGINX Ingress Controller                  # Sets up NGINX Ingress for AKS cluster
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
@@ -97,20 +102,20 @@ jobs:
             --set controller.nodeSelector."kubernetes\.io/os"=linux \
             --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="${{ secrets.AZURE_RESOURCE_GROUP }}"
 
-      - name: Deploy Ingress Resource
+      - name: Deploy Ingress Resource                           # Deploys the ingress configuration for external access
         run: kubectl apply -f k8s/ingress.yaml  
 
-      - name: Set up Horizontal Pod Autoscaler
+      - name: Set up Horizontal Pod Autoscaler                  # Configures autoscaling for AKS deployment
         run: |
           kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
 
-
+  # Sends notifications about the pipeline outcome
   Notification:
-    needs: [build, test, deploy]
+    needs: [build, test, deploy]                                # Runs after build, test, and deploy jobs
     runs-on: ubuntu-latest
-    if: always()  # Ensures this job runs regardless of previous job status
+    if: always()                                                # Ensures this job runs regardless of previous job status
     steps:
-      - name: Slack Notification - Success
+      - name: Slack Notification - Success                      # Sends Slack message if the pipeline succeeds
         if: success()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -118,7 +123,7 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data '{"text":" Build and deployment succeeded!"}' $SLACK_WEBHOOK_URL
 
       # Notify on Failure
-      - name: Slack Notification - Failure
+      - name: Slack Notification - Failure                      # Sends Slack message if the pipeline fails
         if: failure()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

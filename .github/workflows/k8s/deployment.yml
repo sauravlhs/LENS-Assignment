@@ -1,37 +1,37 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps/v1                                                               # Specifies the API version
+kind: Deployment                                                                  # Type of Kubernetes resource
 metadata:
-  name: lensassignment-deployment
+  name: lensassignment-deployment                                                 # Name of the Deployment
 spec:
-  replicas: 1
+  replicas: 1                                                                     # Number of pod replicas to run
   selector:
     matchLabels:
-      app: lensassignment
+      app: lensassignment                                                         # Label selector used to manage the pods
   template:
     metadata:
       labels:
         app: lensassignment
     spec:
       containers:
-      - name: lensassignment
-        image: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/lensassignment:latest
+      - name: lensassignment                                                      # Name of the container in this pod
+        image: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/lensassignment:latest        # Container image with version "latest"
         ports:
-        - containerPort: 80
-        readinessProbe:
+        - containerPort: 80                                                       # Exposes port 80 within the container
+        readinessProbe:                                                           # Readiness probe to check if the application is ready to serve traffic
           httpGet:
             path: /healthz
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
+            port: 80                                                              # Port for the readiness probe
+          initialDelaySeconds: 10                                                 # Time to wait before checking readiness after container starts
+          periodSeconds: 30                                                       # Frequency of readiness checks
+        livenessProbe:                                                            # Liveness probe to check if the application is still running
           httpGet:
             path: /healthz
             port: 80
           initialDelaySeconds: 15
           periodSeconds: 20
-        env:
-          - name: ENV_VARIABLE
+        env:                                                                      # Environment variables for the container
+          - name: ENV_VARIABLE                                                    # Name of the environment variable
             valueFrom:
               secretKeyRef:
-                name: mysecret
+                name: mysecret                                                    # Name of the Kubernetes Secret where the variable is stored
                 key: ENV_VARIABLE
