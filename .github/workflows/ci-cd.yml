@@ -72,6 +72,7 @@ jobs:
     needs: [build, test]                                        # Ensures build and test jobs complete before deployin
     runs-on: ubuntu-latest
     steps:
+
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -109,7 +110,7 @@ jobs:
         run: |
           kubectl autoscale deployment lensassignment-deployment --cpu-percent=70 --min=1 --max=5
 
-       - name: Install Prometheus
+      - name: Install Prometheus
         run: |
           helm install prometheus prometheus-community/prometheus \
             --namespace monitoring \
